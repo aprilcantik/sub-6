@@ -13,6 +13,5 @@ class produk extends Model
         'produk',
         'price',
         'stock',
-
     ];
-};
+}
