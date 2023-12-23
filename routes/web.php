@@ -45,12 +45,20 @@ Route::get('/about/{search}', function () {
 // Route::get('/produk/tambah_produk', [ProdukController::class, 'tambah'])->name('produk.tambah');
 // Route::post('/produk/simpan_produk', [ProdukController::class, 'simpan'])->name('produk.simpan');
 // Route::get('/produk/ubah_produk/{id}', [ProdukController::class, 'ubah'])->name('produk.ubah');
-// Route::post('/produk/update_produk/{id}', [ProdukController::class, 'update'])->name('produk.update');
+
 
 // Route:: get('/profile', function() {
 //     $nama ="Resa Meylani";
 //     return view ('profile', compact('nama'));
 // });
 Route::resource('user', UserController::class);
-Route::resource('produk', ProdukController::class);
+
+Route::middleware(['auth','user'])->group(function() {
+    // Route::post('/produk/update_produk/{id}', [ProdukController::class, 'update'])->name('produk.update');
+    Route::resource('produk', ProdukController::class);
+});
+
 Route::resource('profile', ProfileController::class);
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

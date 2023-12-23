@@ -9,12 +9,16 @@ use App\Models\produk;
 use Illuminate\View\View;
 
 use Illuminate\Http\Request;
-
-class produkController extends Controller
-
+use Illuminate\Support\Facades\Validator;
+class ProdukController extends Controller
 {
-    public function index(){
-
+    /**
+     * index
+     *
+     * @return View
+     */
+    public function index(): View
+    {
         //get posts
         $produk = produk::get();
 
@@ -25,6 +29,16 @@ class produkController extends Controller
         return view('produk.create');
     }
     public function store(Request $request){
+        $validator = Validator::make($request->all(), [
+            'produk' => 'required|min:6',
+            'price' => 'required',
+            'stock' => 'required',
+        ], [
+            'produk.required' => 'nama produk harus di isi.',
+        ]);
+
+        $validator->validate();
+
         produk::create([
             'produk' => $request->produk,
             'price' => $request->price,
@@ -35,12 +49,12 @@ class produkController extends Controller
     }
     public function edit($id)
     {
-    $produk = produk::find($id);
+    $produk = Produk::find($id);
     return view('produk.edit', compact('produk'));
     }
     public function destroy($id)
     {
-        $produk = produk::find($id);
+        $produk = Produk::find($id);
 
         if (!$produk) {
             return redirect('/produk')->with('error', 'Produk tidak ditemukan');
@@ -52,13 +66,13 @@ class produkController extends Controller
     }
     public function update(Request $request, $id)
     {
-    $produk = produk::find($id);
+    $produk = Produk::find($id);
     $produk->update([
         'produk' => $request->produk,
         'price'   => $request->price,
         'stock'   => $request->stock,
     ]);
 
-    return redirect('/produk');
-    }
+    return redirect('/produk')->with('success', 'data berhasil diedit');
+}
 }
